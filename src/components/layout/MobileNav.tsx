@@ -1,10 +1,9 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { X, Menu, Search, QrCode } from 'lucide-react';
+import { X, Menu, Search } from 'lucide-react';
 import WalletButton from '../ui/WalletButton';
 import { useWallet } from '@/context/WalletContext';
-import { useAuth } from '@/context/AuthContext';
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -20,8 +19,6 @@ const MobileNav: React.FC<MobileNavProps> = ({
   isLoggedIn
 }) => {
   const { isConnected, walletAddress, balance } = useWallet();
-  const { user } = useAuth();
-  const isBuyer = user?.role === 'buyer';
 
   return (
     <>
@@ -74,16 +71,6 @@ const MobileNav: React.FC<MobileNavProps> = ({
           >
             Products
           </Link>
-          {isBuyer && (
-            <Link
-              to="/payment/scan"
-              className="py-3 border-b border-gray-100 flex items-center"
-              onClick={onToggle}
-            >
-              <QrCode className="h-5 w-5 mr-2" />
-              Scan Payment QR
-            </Link>
-          )}
           <Link 
             to="/about" 
             className="py-3 border-b border-gray-100"

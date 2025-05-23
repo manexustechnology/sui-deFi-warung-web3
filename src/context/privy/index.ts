@@ -1,4 +1,5 @@
 
-export { PrivyAuthInnerProvider } from './PrivyAuthProvider';
+export { PrivyAuthProvider } from './PrivyProvider';
+export { PrivyAuthProvider as PrivyClientProvider } from './PrivyProvider';
 export { usePrivyAuth } from './usePrivyAuth';
-export type { PrivyAuthContextType } from './types';
+export type { PrivyProviderProps } from './types';
