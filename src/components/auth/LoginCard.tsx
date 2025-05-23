@@ -58,51 +58,15 @@ const LoginCard: React.FC<LoginCardProps> = ({
           </TabsList>
           
           <TabsContent value="buyer">
-            <BuyerLoginForm 
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-              isLoading={isLoading}
-              authLoading={authLoading}
-              handleEmailLogin={handleEmailLogin}
-            />
-            <div className="mt-2">
-              <Button 
-                variant="ghost"
-                size="sm"
-                className="text-xs underline"
-                onClick={() => fillDemoCredentials('buyer')}
-              >
-                Use demo buyer credentials
-              </Button>
-            </div>
+            
           </TabsContent>
           
           <TabsContent value="seller">
-            <SellerLoginForm
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-              isLoading={isLoading}
-              authLoading={authLoading}
-              handleEmailLogin={handleEmailLogin}
-            />
-            <div className="mt-2">
-              <Button 
-                variant="ghost"
-                size="sm"
-                className="text-xs underline"
-                onClick={() => fillDemoCredentials('seller')}
-              >
-                Use demo seller credentials
-              </Button>
-            </div>
+            
           </TabsContent>
         </Tabs>
 
-        <AuthDivider />
+        
 
         <div className="space-y-4">
           <Button
