@@ -1,0 +1,120 @@
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model StoreUser {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email            String    @unique
+  name             String?
+  role             String    @default("buyer")
+  avatar           String?
+  created_at       DateTime  @default(now()) @db.Timestamptz
+  updated_at       DateTime  @default(now()) @db.Timestamptz
+  managed_by       String?   @db.Uuid
+  profile          Profile?
+  orders           Order[]
+  carts            Cart[]
+  products         Product[]
+  managedUsers     StoreUser[] @relation("UserManagement")
+  managedBy        StoreUser?  @relation("UserManagement", fields: [managed_by], references: [id])
+
+  @@map("store_users")
+  @@index([email], name: "idx_store_users_email")
+  @@index([role], name: "idx_store_users_role")
+  @@index([managed_by], name: "idx_store_users_managed_by")
+}
+
+model Profile {
+  id          String   @id @db.Uuid
+  name        String?
+  avatar      String?
+  role        String   @default("buyer")
+  created_at  DateTime @default(now()) @db.Timestamptz
+  updated_at  DateTime @default(now()) @db.Timestamptz
+  user        StoreUser @relation(fields: [id], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Product {
+  id          String       @id
+  name        String
+  description String?
+  price       Decimal      @db.Decimal(10, 2)
+  category    String
+  image       String?
+  seller_id   String?      @db.Uuid
+  stock       Int?         @default(0)
+  barcode     String?
+  status      String?      @default("active")
+  rating      Decimal?     @db.Decimal(3, 1)
+  is_new      Boolean?     @default(false)
+  time_left   String?
+  created_at  DateTime     @default(now()) @db.Timestamptz
+  updated_at  DateTime     @default(now()) @db.Timestamptz
+  seller      StoreUser?   @relation(fields: [seller_id], references: [id])
+  orderItems  OrderItem[]
+  cartItems   CartItem[]
+
+  @@map("products")
+}
+
+model Order {
+  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id        String      @db.Uuid
+  status         String?     @default("pending")
+  total          Decimal     @db.Decimal(10, 2)
+  payment_method String?
+  created_at     DateTime    @default(now()) @db.Timestamptz
+  updated_at     DateTime    @default(now()) @db.Timestamptz
+  user           StoreUser   @relation(fields: [user_id], references: [id])
+  items          OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  order_id    String?   @db.Uuid
+  product_id  String?
+  quantity    Int       @default(1)
+  price       Decimal   @db.Decimal(10, 2)
+  created_at  DateTime  @default(now()) @db.Timestamptz
+  order       Order?    @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  product     Product?  @relation(fields: [product_id], references: [id])
+
+  @@map("order_items")
+}
+
+model Cart {
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id     String      @db.Uuid
+  created_at  DateTime    @default(now()) @db.Timestamptz
+  updated_at  DateTime    @default(now()) @db.Timestamptz
+  user        StoreUser   @relation(fields: [user_id], references: [id])
+  items       CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  cart_id     String?   @db.Uuid
+  product_id  String?
+  quantity    Int       @default(1)
+  created_at  DateTime  @default(now()) @db.Timestamptz
+  updated_at  DateTime  @default(now()) @db.Timestamptz
+  cart        Cart?     @relation(fields: [cart_id], references: [id], onDelete: Cascade)
+  product     Product?  @relation(fields: [product_id], references: [id])
+
+  @@map("cart_items")
+}
