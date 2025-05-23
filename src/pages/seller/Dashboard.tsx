@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -35,12 +36,10 @@ const Dashboard = () => {
     refresh
   } = useDashboardData();
 
-  // This check is more lenient now - only redirects if no user at all
   React.useEffect(() => {
-    if (!user) {
+    if (!user || user.role !== 'seller') {
       navigate('/login');
     }
-    // We don't check for role here anymore - we allow access regardless
   }, [user, navigate]);
 
   const handleRefresh = () => {
@@ -51,12 +50,10 @@ const Dashboard = () => {
     refresh();
   };
 
-  // If no user, don't render anything (will redirect)
-  if (!user) {
+  if (!user || user.role !== 'seller') {
     return null;
   }
 
-  // Otherwise, render the dashboard regardless of user role
   return (
     <SellerLayout>
       <div className="flex-1 space-y-6 p-6">

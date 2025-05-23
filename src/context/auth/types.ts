@@ -9,7 +9,7 @@ export interface AuthContextType {
   userProfile: any;
   userLoadError?: boolean;
   signUp: (email: string, password: string, metadata?: Record<string, any>) => Promise<{ success: boolean; data?: any; error?: any }>;
-  signIn: (email: string, password: string, role?: string) => Promise<{ success: boolean; data?: any; error?: any }>;
+  signIn: (email: string, password: string) => Promise<{ success: boolean; data?: any; error?: any }>;
   signInWithOAuth: (provider: 'google' | 'github' | 'facebook') => Promise<{ success: boolean; data?: any; error?: any }>;
   signOut: () => Promise<{ success: boolean; error?: any }>;
   updateProfile: (updates: Record<string, any>) => Promise<{ success: boolean; data?: any; error?: any }>;

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { usePrivyAuth, PrivyAuthInnerProvider } from '@/context/PrivyContext';
+import { PrivyAuthProvider, usePrivyAuth } from '@/context/PrivyContext';
 import { AuthContextType } from './types';
 import { createContext } from 'react';
 
@@ -20,8 +20,8 @@ const AuthProviderInner = ({ children }: { children: React.ReactNode }) => {
     userLoadError: privyAuth.userLoadError,
     
     // Main auth methods
-    signUp: (email, password, metadata) => privyAuth.signUp(email, password, metadata as any),
-    signIn: (email, password, metadata) => privyAuth.login(email, password, metadata as any),
+    signUp: privyAuth.signUp,
+    signIn: privyAuth.login,
     signInWithOAuth: async () => ({ success: false, error: 'OAuth not supported' }),
     signOut: privyAuth.logout,
     updateProfile: privyAuth.updateProfile,
@@ -34,7 +34,7 @@ const AuthProviderInner = ({ children }: { children: React.ReactNode }) => {
     },
     
     // Legacy alias methods
-    login: (email, password, metadata) => privyAuth.login(email, password, metadata as any),
+    login: privyAuth.login,
     loginWithGoogle: async () => ({ success: false, error: 'Google login not supported' }),
     logout: privyAuth.logout
   };
@@ -46,12 +46,12 @@ const AuthProviderInner = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Export new AuthProvider that wraps PrivyAuthInnerProvider
+// Export new AuthProvider that wraps PrivyAuthProvider
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   return (
-    <PrivyAuthInnerProvider>
+    <PrivyAuthProvider>
       <AuthProviderInner>{children}</AuthProviderInner>
-    </PrivyAuthInnerProvider>
+    </PrivyAuthProvider>
   );
 };
 
